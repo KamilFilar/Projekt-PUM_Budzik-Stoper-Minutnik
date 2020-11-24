@@ -346,157 +346,306 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context){
     return Container(
+        color: Colors.grey.shade900,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
                 flex: 6,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: 10.0,
+                child: Container(
+                  margin: const EdgeInsets.all(45),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.grey.shade900,
+                        Colors.green.shade900,
+                        Colors.green.shade900,
+                        Colors.grey.shade900,
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    border: Border.all(
+                      width: 2,
+                      color: Colors.lightGreenAccent.shade700,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.lightGreenAccent.shade700.withOpacity(0.8),
+                        blurRadius: 15,
+                        spreadRadius: 8,
+                        offset: Offset(4, 4),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.all((Radius.circular(30))),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(
+                                bottom: 5.0,
+                              ),
+                              child: Text("Godziny",
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                            child: Text("Godziny"),
-                          ),
-                          NumberPicker.integer(
-                              initialValue: hour,
-                              minValue: 0,
-                              maxValue: 23,
-                              listViewWidth: 60.0,
-                              onChanged: (val) {
-                                setState(() {
-                                  hour = val;
-                                });
-                              })
-                        ]),
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: 10.0,
+                            NumberPicker.integer(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(width: 1.0, color: Color(0xFFFFFFFFFF)),
+                                    bottom: BorderSide(width: 1.0, color: Color(0xFFFFFFFFFF)),
+                                  ),
+                                ),
+                                selectedTextStyle: TextStyle(
+                                    color: Colors.lightGreenAccent.shade700,
+                                    fontSize: 33
+                                ),
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30
+                                ),
+                                initialValue: hour,
+                                minValue: 0,
+                                maxValue: 23,
+                                listViewWidth: 60.0,
+                                onChanged: (val) {
+                                  setState(() {
+                                    hour = val;
+                                  });
+                                })
+                          ]),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+
+                            Padding(
+                              padding: EdgeInsets.only(
+                                bottom: 5.0,
+                                left: 15.0,
+                                right: 15.0,
+                              ),
+                              child: Text("Minuty",
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                            child: Text("Minuty"),
-                          ),
-                          NumberPicker.integer(
-                              initialValue: min,
-                              minValue: 0,
-                              maxValue: 59,
-                              listViewWidth: 60.0,
-                              onChanged: (val) {
-                                setState(() {
-                                  min = val;
-                                });
-                              })
-                        ]),
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: 10.0,
+                            NumberPicker.integer(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(width: 1.0, color: Color(0xFFFFFFFFFF)),
+                                    bottom: BorderSide(width: 1.0, color: Color(0xFFFFFFFFFF)),
+                                  ),
+                                ),
+                              selectedTextStyle: TextStyle(
+                                  color: Colors.lightGreenAccent.shade700,
+                                  fontSize: 33
+                              ),
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30
+                                ),
+                                initialValue: min,
+                                minValue: 0,
+                                maxValue: 59,
+                                listViewWidth: 60.0,
+                                onChanged: (val) {
+                                  setState(() {
+                                    min = val;
+                                  });
+                                })
+                          ]),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(
+                                bottom: 5.0,
+                              ),
+                              child: Text("Sekundy",
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                            child: Text("Sekundy"),
-                          ),
-                          NumberPicker.integer(
-                              initialValue: sec,
-                              minValue: 0,
-                              maxValue: 59,
-                              listViewWidth: 60.0,
-                              onChanged: (val) {
-                                setState(() {
-                                  sec = val;
-                                });
-                              })
-                        ]),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  timeToDisplay,
-                  style: TextStyle(
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.w700,
+                            NumberPicker.integer(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(width: 1.0, color: Color(0xFFFFFFFFFF)),
+                                    bottom: BorderSide(width: 1.0, color: Color(0xFFFFFFFFFF)),
+                                  ),
+                                ),
+                                selectedTextStyle: TextStyle(
+                                    color: Colors.lightGreenAccent.shade700,
+                                    fontSize: 33
+                                ),
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30
+                                ),
+                                initialValue: sec,
+                                minValue: 0,
+                                maxValue: 59,
+                                listViewWidth: 60.0,
+                                onChanged: (val) {
+                                  setState(() {
+                                    sec = val;
+                                  });
+                                })
+                          ]),
+                    ],
                   ),
                 ),
               ),
-              Expanded(
-                flex: 1,
+              Container(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Expanded(
+                  flex: 1,
+                  child: Text(
+                    timeToDisplay,
+                    style: TextStyle(
+                      fontSize: 40.0,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    RaisedButton(
-                      onPressed: stopped ? resume : null,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 40.0,
-                        vertical: 10.0,
-                      ),
-                      color: Colors.lightBlue,
-                      child: Text(
-                        "Wznów",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
+                    Container(
+                      child: RaisedButton(
+                        onPressed: stopped ? resume : null,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                        padding: EdgeInsets.all(3.0),
+                        color: Colors.green.shade900,
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: [Colors.grey.shade900,
+                              Colors.green.shade900,],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(30.0),
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.lightGreenAccent.shade700,
+                            ),
+                          ),
+                          child: Container(
+                            constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Wznów",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+
                       ),
                     ),
                   ],
                 ),
               ),
+
               Expanded(
                 flex: 3,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    RaisedButton(
-                      onPressed: started ? start : null,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 40.0,
-                        vertical: 10.0,
-                      ),
-                      color: Colors.green,
-                      child: Text(
-                        "Start",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
+                    Container(
+                      child: RaisedButton(
+                        onPressed: started ? start : null,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                        padding: EdgeInsets.all(3.0),
+                        color: Colors.green.shade900,
+                        child: Ink(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: [Colors.grey.shade900,
+                                Colors.green.shade900,],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              borderRadius: BorderRadius.circular(30.0),
+                            border: Border.all(
+                            width: 2,
+                            color: Colors.lightGreenAccent.shade700,
+                          ),
+
+                          ),
+                          child: Container(
+                            constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Start",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                  color: Colors.white
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
-                    RaisedButton(
-                      onPressed: stopped ? null : stop,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 40.0,
-                        vertical: 10.0,
-                      ),
-                      color: Colors.red,
-                      child: Text(
-                        "Stop",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
+                    Container(
+                      child: RaisedButton(
+                        onPressed: stopped ? null : stop,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                        padding: EdgeInsets.all(1.0),
+                        color: Colors.red,
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: [Colors.grey.shade900,
+                              Colors.red.shade900,],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(30.0),
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.redAccent.shade700,
+                            ),
+
+                          ),
+                          child: Container(
+                            constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Stop",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
                   ],
                 ),
               ),
+
+
             ]));
   }
 

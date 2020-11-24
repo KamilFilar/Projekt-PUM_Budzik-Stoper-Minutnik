@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  flutter_local_notifications: ^3.0.1+5
   intl: ^0.16.1
   numberpicker: ^1.2.1
   android_alarm_manager: ^0.4.5+17
@@ -77,3 +78,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

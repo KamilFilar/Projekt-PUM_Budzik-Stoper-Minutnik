@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:projekt_pum/Minutnik.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'Stoper.dart';
 import 'Minutnik.dart';
 import 'Budzik.dart';
 
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  var initializationSettingsAndroid =
+  AndroidInitializationSettings('clock');
+  var initializationSettingsIOS = IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      onDidReceiveLocalNotification:
+          (int id, String title, String body, String payload) async {});
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String payload) async {
+        if (payload != null) {
+          debugPrint('notification payload: ' + payload);
+        }
+      });
   runApp(MyApp());
 }
 
@@ -58,9 +79,40 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: Colors.white
+        ),
+        backgroundColor: Colors.green,
         title: Text("Projekt PUM"),
         centerTitle: true,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    Colors.grey.shade900,
+                    Colors.green.shade900,
+                    Colors.green.shade700,
+                    Colors.grey.shade900,
+                  ]
+              ),
+              border: Border.all(
+                width: 1,
+                color: Colors.green.shade900,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.lightGreenAccent.shade700.withOpacity(0.8),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                  offset: Offset(4, 4),
+                ),
+              ],
+            ),
+          ),
         bottom: TabBar(
+          indicatorColor: Colors.lightGreenAccent.shade700,
           tabs: <Widget>[
             Text("Budzik"),
             Text("Stoper"),
@@ -72,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           labelStyle: TextStyle(
             fontSize: 20.0,
           ),
-          unselectedLabelColor: Colors.white54,
+          unselectedLabelColor: Colors.white,
           controller: tb,
         ),
       ),

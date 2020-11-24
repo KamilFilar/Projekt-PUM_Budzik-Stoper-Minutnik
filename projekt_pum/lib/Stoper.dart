@@ -109,6 +109,7 @@ class _Stoper extends State<Stoper> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        color: Colors.grey.shade900,
         child: Column(
           children: [
             Expanded(
@@ -123,6 +124,7 @@ class _Stoper extends State<Stoper> {
                           style: TextStyle(
                             fontSize: 50.0,
                             fontWeight: FontWeight.w700,
+                            color: Colors.lightGreenAccent.shade700
                           ),
                         )),
                   ),
@@ -146,6 +148,7 @@ class _Stoper extends State<Stoper> {
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w700,
+                                      color: Colors.white
                                     ),
                                   )),
                             )),
@@ -161,16 +164,33 @@ class _Stoper extends State<Stoper> {
                                 children: <Widget>[
                                   RaisedButton(
                                     onPressed: stop2 ? null : showPartTime,
-                                    color: Colors.red,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 40.0,
-                                      vertical: 15.0,
-                                    ),
-                                    child: Text(
-                                      "Pomiar",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.white,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                    padding: EdgeInsets.all(3.0),
+                                    color: Colors.green.shade900,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(colors: [Colors.grey.shade900,
+                                          Colors.green.shade900,],
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.lightGreenAccent.shade700,
+                                        ),
+                                      ),
+                                      child: Container(
+                                        constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Pomiar",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -181,31 +201,65 @@ class _Stoper extends State<Stoper> {
                                 children: <Widget>[
                                   RaisedButton(
                                     onPressed: stop2 ? null : stopStoper,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                    padding: EdgeInsets.all(2.0),
                                     color: Colors.red,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 40.0,
-                                      vertical: 15.0,
-                                    ),
-                                    child: Text(
-                                      "Stop",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.white,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(colors: [Colors.grey.shade900,
+                                          Colors.red.shade900,],
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.redAccent.shade700,
+                                        ),
+                                      ),
+                                      child: Container(
+                                        constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Stop",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                   RaisedButton(
                                     onPressed: reset2 ? null : resetStoper,
-                                    color: Colors.green,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 40.0,
-                                      vertical: 15.0,
-                                    ),
-                                    child: Text(
-                                      "Reset",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.white,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                    padding: EdgeInsets.all(3.0),
+                                    color: Colors.red,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(colors: [Colors.grey.shade900,
+                                          Colors.red.shade900,],
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.redAccent.shade700,
+                                        ),
+                                      ),
+                                      child: Container(
+                                        constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Reset",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -216,16 +270,33 @@ class _Stoper extends State<Stoper> {
                                 children: <Widget>[
                                   RaisedButton(
                                     onPressed: startStoper,
-                                    color: Colors.blue,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 80.0,
-                                      vertical: 20.0,
-                                    ),
-                                    child: Text(
-                                      "Start",
-                                      style: TextStyle(
-                                        fontSize: 24.0,
-                                        color: Colors.white,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                    padding: EdgeInsets.all(3.0),
+                                    color: Colors.green.shade900,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(colors: [Colors.grey.shade900,
+                                          Colors.green.shade900,],
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.lightGreenAccent.shade700,
+                                        ),
+                                      ),
+                                      child: Container(
+                                        constraints: BoxConstraints(minWidth: 200, maxHeight: 50.0),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Start",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
