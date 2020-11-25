@@ -15,13 +15,10 @@ class _Stoper extends State<Stoper> {
     super.initState();
   }
 
-  bool start2 = true;
-  bool stop2 = true;
-  bool reset2 = true;
-  bool savetime = true;
+
   String StoperTime = "00:00:00";
-  int SaveTime = 0;
   String SaveTimeString = "00:00:00";
+
   var swatch = Stopwatch();
   final dur = const Duration(seconds: 1);
 
@@ -34,9 +31,9 @@ class _Stoper extends State<Stoper> {
           ":" +
           (swatch.elapsed.inMinutes % 60).toString().padLeft(2, "0") +
           ":" +
-          (swatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
-      //Wypisać milisekundy!!
-      //+ (swatch.elapsed.inMilliseconds%1000).toString().padLeft(2,"0");
+          (swatch.elapsed.inSeconds % 60).toString().padLeft(2, "0")+
+          ":" +
+          (swatch.elapsed.inMilliseconds % 100).toString().padLeft(2, "0");
     });
   }
 
@@ -44,10 +41,17 @@ class _Stoper extends State<Stoper> {
     Timer(dur, keepruning);
   }
 
+
+  bool start2 = true;
+  bool stop2 = true;
+  bool reset2 = true;
+  bool savetime = true;
+
   void startStoper() {
     setState(() {
       stop2 = false;
       reset2 = true;
+      start2 = true;
     });
     swatch.start();
     starttimer();
@@ -67,7 +71,7 @@ class _Stoper extends State<Stoper> {
       reset2 = true;
     });
     StoperTime = "00:00:00";
-    for(int i=0;i<5;i++){
+    for(int i=0;i<10;i++){
       widget.x[i] = null;
     }
     swatch.reset();
@@ -82,13 +86,20 @@ class _Stoper extends State<Stoper> {
         ":" +
         (swatch.elapsed.inMinutes % 60).toString().padLeft(2, "0") +
         ":" +
-        (swatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
+        (swatch.elapsed.inSeconds % 60).toString().padLeft(2, "0")+
+        ":" +
+        (swatch.elapsed.inMilliseconds % 100).toString().padLeft(2, "0");
 
     print(SaveTimeString);
   }
   // List<String> x =  List<String>();
 
   showPartTime() {
+    widget.x[9] = widget.x[8];
+    widget.x[8] = widget.x[7];
+    widget.x[7] = widget.x[6];
+    widget.x[6] = widget.x[5];
+    widget.x[5] = widget.x[4];
     widget.x[4] = widget.x[3];
 
     widget.x[3] = widget.x[2];
@@ -101,10 +112,18 @@ class _Stoper extends State<Stoper> {
         ":" +
         (swatch.elapsed.inMinutes % 60).toString().padLeft(2, "0") +
         ":" +
-        (swatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
-    print(widget.x[0]);
-    setState((){});
+        (swatch.elapsed.inSeconds % 60).toString().padLeft(2, "0")+
+        ":" +
+        (swatch.elapsed.inMilliseconds % 100).toString().padLeft(2, "0");
+
+    print("Pomiar: "+widget.x[0]);
+
+    setState(() {
+
+    });
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +135,34 @@ class _Stoper extends State<Stoper> {
               child: Column(children: [
                 Container(
                   child: Padding(
-                    padding: const EdgeInsets.only(top:80.0),
+                    padding: const EdgeInsets.only(top:50.0),
                     child: Container(
+                      margin: EdgeInsets.only(bottom: 25, left: 25, right: 25),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.grey.shade900,
+                              Colors.green.shade900,
+                              Colors.green.shade900,
+                              Colors.grey.shade900,
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          border: Border.all(
+                            width: 2,
+                            color: Colors.lightGreenAccent.shade700,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.lightGreenAccent.shade700.withOpacity(0.8),
+                              blurRadius: 15,
+                              spreadRadius: 1,
+                              offset: Offset(4, 4),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.all((Radius.circular(30))),
+                        ),
                         alignment: Alignment.center,
                         child: Text(
                           StoperTime,
@@ -135,26 +180,52 @@ class _Stoper extends State<Stoper> {
                     children: [
                       Expanded(
                         flex: 2,
+
+
+
+
                         child: Container(
+                          margin: EdgeInsets.only(bottom: 25, left: 60, right: 60),
+                            padding: EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.lightGreenAccent.shade700,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                ),
+                              ],
+                              borderRadius: BorderRadius.all((Radius.circular(30))),
+                            ),
                             alignment: Alignment.topCenter,
-                            child: Column(
-                              children: List.generate(
-                                  5,
-                                      (index) => Text(
-                                    (widget.x.elementAt(index) == null ||
-                                        widget.x.elementAt(index) == ""
-                                        ? ""
-                                        : (index+1).toString()+" - "+widget.x.elementAt(index)),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white
+                              child: new ListView(
+                              shrinkWrap: true,
+                              children: <Widget>[
+                                Column(
+                                  children: List.generate(
+                                    10,
+                                        (index) => Text(
+                                      (widget.x.elementAt(index) == null ||
+                                          widget.x.elementAt(index) == ""
+                                          ? "Pomiar "+(index+1).toString()+'\n'+"-----------------------"
+                                          : "t"+(10-index).toString()+" - "+widget.x.elementAt(index)+'\n'+"-----------------------"),
+                                          textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  )),
-                            )),
+                                  ),
+                                )
+                              ],
+                              )
+                        ),
                       ),
                       Expanded(
-                        flex: 4,
+                        flex: 2,
                         child: Container(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -12,13 +12,13 @@ class Budzik extends StatefulWidget {
 }
 
 class _Budzik extends State<Budzik> {
-
   bool isSwitched = false;
-
 
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
     return Container(
       color: Colors.grey.shade900,
       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 45),
@@ -94,7 +94,7 @@ class _Budzik extends State<Budzik> {
                     Row(
                       children: <Widget>[
                         SizedBox(width: 10),
-                        Text('25 listopad',
+                        Text(formattedDate,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

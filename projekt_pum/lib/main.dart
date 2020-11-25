@@ -60,12 +60,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
   //------------------------ Stoper---------------------------\\
   Widget stopwach() {
-    List<String> x = new List(5);
+    List<String> x = new List(10);
     x[0] = "";
     x[1] = x[0];
     x[2] = x[1];
     x[3] = x[2];
     x[4] = x[3];
+    x[5] = x[4];
+    x[6] = x[5];
+    x[7] = x[6];
+    x[8] = x[7];
+    x[9] = x[8];
     return Stoper(x);
   }
   //------------------------ AppBar ------------------------\\

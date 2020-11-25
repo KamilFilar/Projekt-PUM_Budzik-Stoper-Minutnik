@@ -511,8 +511,7 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
               ),
               Container(
                 padding: EdgeInsets.only(bottom: 10),
-                child: Expanded(
-                  flex: 1,
+                child: Container(
                   child: Text(
                     timeToDisplay,
                     style: TextStyle(
