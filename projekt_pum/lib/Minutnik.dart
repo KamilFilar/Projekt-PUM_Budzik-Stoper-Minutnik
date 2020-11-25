@@ -421,11 +421,11 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                                     hour = val;
                                   });
                                 })
-                          ]),
+                          ]
+                      ),
                       Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-
                             Padding(
                               padding: EdgeInsets.only(
                                 bottom: 5.0,

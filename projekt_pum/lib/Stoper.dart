@@ -51,7 +51,6 @@ class _Stoper extends State<Stoper> {
     setState(() {
       stop2 = false;
       reset2 = true;
-      start2 = true;
     });
     swatch.start();
     starttimer();
@@ -180,10 +179,6 @@ class _Stoper extends State<Stoper> {
                     children: [
                       Expanded(
                         flex: 2,
-
-
-
-
                         child: Container(
                           margin: EdgeInsets.only(bottom: 25, left: 60, right: 60),
                             padding: EdgeInsets.all(15),
@@ -252,7 +247,7 @@ class _Stoper extends State<Stoper> {
                                         ),
                                       ),
                                       child: Container(
-                                        constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                                        constraints: BoxConstraints(minWidth: 130, maxHeight: 45.0),
                                         alignment: Alignment.center,
                                         child: Text(
                                           "Pomiar",
@@ -289,7 +284,7 @@ class _Stoper extends State<Stoper> {
                                         ),
                                       ),
                                       child: Container(
-                                        constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                                        constraints: BoxConstraints(minWidth: 130, maxHeight: 45.0),
                                         alignment: Alignment.center,
                                         child: Text(
                                           "Stop",
@@ -321,7 +316,7 @@ class _Stoper extends State<Stoper> {
                                         ),
                                       ),
                                       child: Container(
-                                        constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                                        constraints: BoxConstraints(minWidth: 130, maxHeight: 45.0),
                                         alignment: Alignment.center,
                                         child: Text(
                                           "Reset",
@@ -364,7 +359,7 @@ class _Stoper extends State<Stoper> {
                                           "Start",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 25,
                                               color: Colors.white
                                           ),
                                         ),

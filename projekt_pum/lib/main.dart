@@ -87,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         iconTheme: IconThemeData(
             color: Colors.white
         ),
-        backgroundColor: Colors.green,
         title: Text("Projekt PUM"),
         centerTitle: true,
           flexibleSpace: Container(
