@@ -36,9 +36,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Time',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: MyHomePage(),
     );
   }
@@ -50,6 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+
   //------------------------ Budzik ---------------------------\\
   Widget alarm(){
     return Budzik();
@@ -84,10 +82,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-            color: Colors.white
+        title: Text('Projekt PUM',
+        style: TextStyle(
+          fontFamily: 'Comic',
+          ),
         ),
-        title: Text("Projekt PUM"),
         centerTitle: true,
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -118,7 +117,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         bottom: TabBar(
           indicatorColor: Colors.lightGreenAccent.shade700,
           tabs: <Widget>[
-            Text("Budzik"),
+            Text('Budzik',
+            style: TextStyle(
+              fontFamily: 'Comic',
+            ),
+            ),
             Text("Stoper"),
             Text("Minutnik"),
           ],
