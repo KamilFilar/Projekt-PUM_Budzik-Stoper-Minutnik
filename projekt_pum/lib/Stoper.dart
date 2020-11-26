@@ -46,8 +46,11 @@ class _Stoper extends State<Stoper> {
   bool stop2 = true;
   bool reset2 = true;
   bool savetime = true;
+  bool isButtonBlocked=false;
+  bool isrunning = false;
 
   void startStoper() {
+    isrunning = true;
     setState(() {
       stop2 = false;
       reset2 = true;
@@ -57,6 +60,7 @@ class _Stoper extends State<Stoper> {
   }
 
   void stopStoper() {
+    isrunning = false;
     setState(() {
       stop2 = true;
       reset2 = false;
@@ -70,6 +74,7 @@ class _Stoper extends State<Stoper> {
       reset2 = true;
     });
     StoperTime = "00:00:00";
+    isButtonBlocked=false;
     for(int i=0;i<10;i++){
       widget.x[i] = null;
     }
@@ -117,9 +122,8 @@ class _Stoper extends State<Stoper> {
 
     print("Pomiar: "+widget.x[0]);
 
-    setState(() {
-
-    });
+    if(widget.x[9]!=null) isButtonBlocked=true;
+    setState(() {});
 
   }
 
@@ -207,6 +211,7 @@ class _Stoper extends State<Stoper> {
                                           ? "Pomiar "+(index+1).toString()+'\n'+"-----------------------"
                                           : "t"+(10-index).toString()+" - "+widget.x.elementAt(index)+'\n'+"-----------------------"),
                                           textAlign: TextAlign.center,
+
                                       style: TextStyle(
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.w500,
@@ -229,10 +234,10 @@ class _Stoper extends State<Stoper> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   RaisedButton(
-                                    onPressed: stop2 ? null : showPartTime,
+                                    onPressed: (){isrunning ? {isButtonBlocked ? print("Limit pomiarów!") :{stop2 ? null : showPartTime()}} : print("Stoper nie pracuje!"); },
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                                     padding: EdgeInsets.all(3.0),
-                                    color: Colors.green.shade900,
+                                    color: isButtonBlocked ? Colors.black : Colors.green.shade900,
                                     child: Ink(
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(colors: [Colors.grey.shade900,
@@ -335,10 +340,10 @@ class _Stoper extends State<Stoper> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   RaisedButton(
-                                    onPressed: startStoper,
+                                    onPressed: (){isrunning ? print("Stoper jest uruchomiony!"): startStoper();},
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                                     padding: EdgeInsets.all(3.0),
-                                    color: Colors.green.shade900,
+                                    color: isrunning ? Colors.black : Colors.green.shade900,
                                     child: Ink(
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(colors: [Colors.grey.shade900,

@@ -1,23 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:projekt_pum/alarm_info.dart';
 
+import 'data.dart';
 
 
 class EditAlarm extends StatefulWidget {
+  final AlarmInfo alarm;
+  EditAlarm({this.alarm});
   @override
   _EditAlarm createState() => _EditAlarm();
 }
 
 class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
-
   //Numberpicker
   @override
   void initState() {
     super.initState();
   }
+
   int hour = 6;
   int min = 30;
+
 
   //Switche
   bool isSwitched_wib = false;
@@ -45,12 +50,13 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
 
 
 
-  //Edytowanie alarmu
 
 
 
   @override
   Widget build(BuildContext context) {
+    AlarmInfo copyOfAlarm = AlarmInfo.copy(widget.alarm);
+
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
       appBar: AppBar(
@@ -717,7 +723,10 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                   Container(
                     padding: EdgeInsets.only(right: 20.0, left: 8.0),
                     child: RaisedButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        alarms.remove(widget.alarm);
+                        alarms.add(copyOfAlarm);
+                      },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),
                       color: Colors.green.shade900,

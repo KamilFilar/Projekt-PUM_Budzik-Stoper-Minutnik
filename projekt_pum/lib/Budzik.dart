@@ -29,12 +29,21 @@ class _Budzik extends State<Budzik> {
 
   //Usuwanie danego alarmu
 
+  void DeleteAlarm(var alarm){
+    alarms.remove(alarm);
+  }
+  // Pobieranie danych z listy i wyświetlanie ich
+
+  //Edytowanie alarmu
+  void EditKonkretnyAlarm(var alarm){
+
+  }
+
   @override
   Widget build(BuildContext context) {
 
     var dateTime = new DateTime.now().add(Duration(days: 1));
     String formattedDate = dateFormat.format(dateTime);
-
 
     return Container(
       color: Colors.grey.shade900,
@@ -45,6 +54,7 @@ class _Budzik extends State<Budzik> {
           Expanded(child:
           ListView(
             children: alarms.map<Widget>((alarm) {
+
               return Container(
                 margin: const EdgeInsets.only(bottom: 25),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -81,7 +91,7 @@ class _Budzik extends State<Budzik> {
                         Row(
                           children: <Widget>[
                             SizedBox(width: 8),
-                            Text('14:00',
+                            Text(DateFormat('hh:mm').format(alarm.alarmDateTime),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
@@ -120,7 +130,7 @@ class _Budzik extends State<Budzik> {
                           color: Colors.lightGreenAccent.shade700,
                           icon: Icon(Icons.delete_forever),
                           onPressed: () {
-                            scheduleAlarm();
+                            DeleteAlarm(alarm);
                           },
                         ),
                         IconButton(
@@ -130,7 +140,7 @@ class _Budzik extends State<Budzik> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => EditAlarm()),
+                              MaterialPageRoute(builder: (context) => EditAlarm(alarm: alarm,)),
                             );
                           },
                         ),
@@ -192,6 +202,7 @@ class _Budzik extends State<Budzik> {
       'alarm_notif',
       'Channel for Alarm notification',
       icon: 'clock',
+      playSound: true,
       sound: RawResourceAndroidNotificationSound('song'),
       largeIcon: DrawableResourceAndroidBitmap('clock'),
     );

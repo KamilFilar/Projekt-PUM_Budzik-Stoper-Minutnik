@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -353,7 +354,7 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
               Expanded(
                 flex: 6,
                 child: Container(
-                  margin: const EdgeInsets.all(45),
+                  margin: const EdgeInsets.only(left: 50, right: 50, top: 60, bottom: 60),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -420,7 +421,8 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                                   setState(() {
                                     hour = val;
                                   });
-                                })
+                                }
+                                )
                           ]
                       ),
                       Column(
@@ -463,8 +465,10 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                                   setState(() {
                                     min = val;
                                   });
-                                })
-                          ]),
+                                }
+                                )
+                          ]
+                      ),
                       Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -503,19 +507,21 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                                   setState(() {
                                     sec = val;
                                   });
-                                })
-                          ]),
+                                }
+                                )
+                          ]
+                      ),
                     ],
                   ),
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(bottom: 10),
+                padding: EdgeInsets.only(bottom: 25),
                 child: Container(
                   child: Text(
                     timeToDisplay,
                     style: TextStyle(
-                      fontSize: 40.0,
+                      fontSize: 45.0,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
                     ),
@@ -523,6 +529,7 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                 ),
               ),
               Container(
+                padding: EdgeInsets.only(top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -546,27 +553,25 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                             ),
                           ),
                           child: Container(
-                            constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                            constraints: BoxConstraints(minWidth: 150, maxHeight: 45.0),
                             alignment: Alignment.center,
                             child: Text(
                               "Wznów",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white
+                                  fontSize: 23,
+                                  color: Colors.white,
                               ),
                             ),
                           ),
                         ),
-
                       ),
                     ),
                   ],
                 ),
               ),
-
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -588,16 +593,15 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                             width: 2,
                             color: Colors.lightGreenAccent.shade700,
                           ),
-
                           ),
                           child: Container(
-                            constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                            constraints: BoxConstraints(minWidth: 150, maxHeight: 45.0),
                             alignment: Alignment.center,
                             child: Text(
                               "Start",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 23,
                                   color: Colors.white
                               ),
                             ),
@@ -623,16 +627,15 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                               width: 2,
                               color: Colors.redAccent.shade700,
                             ),
-
                           ),
                           child: Container(
-                            constraints: BoxConstraints(minWidth: 100, maxHeight: 45.0),
+                            constraints: BoxConstraints(minWidth: 150, maxHeight: 45.0),
                             alignment: Alignment.center,
                             child: Text(
                               "Stop",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 23,
                                   color: Colors.white
                               ),
                             ),
@@ -643,9 +646,9 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-
-
-            ]));
+            ]
+        )
+    );
   }
 
 }

@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-
+import 'alarm_info.dart';
+import 'data.dart';
 
 class NewAlarm extends StatefulWidget {
   @override
@@ -42,10 +43,11 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
   bool nd = true;
 
 
-
-
-
   //Dodawanie nowego alarmu
+
+  void AddNewAlarm(){
+    alarms.add(new AlarmInfo(DateTime.now().add(Duration(hours: 1)), opis: 'Poranek'));
+  }
 
 
 
@@ -717,7 +719,7 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                   Container(
                     padding: EdgeInsets.only(right: 20.0, left: 8.0),
                     child: RaisedButton(
-                      onPressed: (){},
+                      onPressed: (){AddNewAlarm();},
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),
                       color: Colors.green.shade900,
