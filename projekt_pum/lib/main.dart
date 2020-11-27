@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'Stoper.dart';
 import 'Minutnik.dart';
 import 'Budzik.dart';
@@ -83,8 +85,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text('Projekt PUM',
-        style: TextStyle(
-          fontFamily: 'Comic',
+          style: GoogleFonts.comicNeue(
+            fontWeight: FontWeight.w700,
+            fontSize: 30,
+            color: Colors.lightGreenAccent.shade400
           ),
         ),
         centerTitle: true,
@@ -118,12 +122,23 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           indicatorColor: Colors.lightGreenAccent.shade700,
           tabs: <Widget>[
             Text('Budzik',
-            style: TextStyle(
-              fontFamily: 'Comic',
+              style: GoogleFonts.comicNeue(
+                fontWeight: FontWeight.w700,
+                fontSize: 26,
+              ),
             ),
+            Text("Stoper",
+              style: GoogleFonts.comicNeue(
+              fontWeight: FontWeight.w700,
+              fontSize: 26,
+              ),
             ),
-            Text("Stoper"),
-            Text("Minutnik"),
+            Text("Minutnik",
+              style: GoogleFonts.comicNeue(
+                fontWeight: FontWeight.w700,
+                fontSize: 26,
+              ),
+            ),
           ],
           labelPadding: EdgeInsets.only(
             bottom: 10.0,

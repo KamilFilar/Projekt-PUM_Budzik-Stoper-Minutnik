@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class Stoper extends StatefulWidget {
@@ -26,6 +27,7 @@ class _Stoper extends State<Stoper> {
     if (swatch.isRunning) {
       starttimer();
     }
+    if (this.mounted){
     setState(() {
       StoperTime = swatch.elapsed.inHours.toString().padLeft(2, "0") +
           ":" +
@@ -35,6 +37,7 @@ class _Stoper extends State<Stoper> {
           ":" +
           (swatch.elapsed.inMilliseconds % 100).toString().padLeft(2, "0");
     });
+    }
   }
 
   void starttimer() {
@@ -51,10 +54,12 @@ class _Stoper extends State<Stoper> {
 
   void startStoper() {
     isrunning = true;
-    setState(() {
-      stop2 = false;
-      reset2 = true;
-    });
+    if (this.mounted){
+      setState(() {
+        stop2 = false;
+        reset2 = true;
+      });
+    }
     swatch.start();
     starttimer();
   }
@@ -126,7 +131,11 @@ class _Stoper extends State<Stoper> {
     setState(() {});
 
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,10 +178,10 @@ class _Stoper extends State<Stoper> {
                         alignment: Alignment.center,
                         child: Text(
                           StoperTime,
-                          style: TextStyle(
-                            fontSize: 50.0,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.lightGreenAccent.shade700
+                          style: GoogleFonts.comicNeue(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.lightGreenAccent.shade700,
+                            fontSize: 50,
                           ),
                         )),
                   ),
@@ -212,11 +221,11 @@ class _Stoper extends State<Stoper> {
                                           : "t"+(10-index).toString()+" - "+widget.x.elementAt(index)+'\n'+"-----------------------"),
                                           textAlign: TextAlign.center,
 
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white,
-                                      ),
+                                          style: GoogleFonts.comicNeue(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
                                     ),
                                   ),
                                 )
@@ -257,9 +266,10 @@ class _Stoper extends State<Stoper> {
                                         child: Text(
                                           "Pomiar",
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white
+                                          style: GoogleFonts.comicNeue(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 25,
                                           ),
                                         ),
                                       ),
@@ -294,9 +304,10 @@ class _Stoper extends State<Stoper> {
                                         child: Text(
                                           "Stop",
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white
+                                          style: GoogleFonts.comicNeue(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 25,
                                           ),
                                         ),
                                       ),
@@ -326,9 +337,10 @@ class _Stoper extends State<Stoper> {
                                         child: Text(
                                           "Reset",
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white
+                                          style: GoogleFonts.comicNeue(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 25,
                                           ),
                                         ),
                                       ),
@@ -363,9 +375,10 @@ class _Stoper extends State<Stoper> {
                                         child: Text(
                                           "Start",
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              color: Colors.white
+                                          style: GoogleFonts.comicNeue(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 30,
                                           ),
                                         ),
                                       ),

@@ -17,14 +17,13 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
   void initState() {
     super.initState();
   }
-  int hour = 6;
-  int min = 30;
+  int hour = 0;
+  int min = 0;
 
   //Switche
   bool isSwitched_wib = false;
   bool isSwitched_drzemka = false;
-  int id_wib = 0;
-  int id_drzemka = 0;
+
 
   //Dni tygodnia
   bool pressed_pon = true;
@@ -44,9 +43,32 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
 
 
   //Dodawanie nowego alarmu
+  var hour_to_add = 0; // 6
+  var min_to_add = 0; // 30
+  var day_to_add = DateTime.now().day+1;
+
+  DateTime date_to_add;
+  DateTime whatDays;
+  bool vibration_to_add = false;
+  bool drzemka_to_add = false;
+  bool isActive_status = true;
 
   void AddNewAlarm(){
-    alarms.add(new AlarmInfo(DateTime.now().add(Duration(hours: 1)), opis: 'Poranek'));
+    bool isToday = false;
+    if(hour_to_add>=DateTime.now().hour){ //Gdzina alarmu >= Aktualna godzina
+      isToday = true;
+    }
+    if(min_to_add>DateTime.now().minute && isToday==true){ //Min. alarmu > Aktualna min i isToday = true
+      day_to_add = DateTime.now().day;
+    }
+    else if(hour_to_add>DateTime.now().hour){ // Gdzina alarmu > Aktualna godzina
+      day_to_add = DateTime.now().day;
+    }
+    date_to_add = DateTime(DateTime.now().year, DateTime.now().month, day_to_add, hour_to_add, min_to_add);
+
+    // Jakoś logistycznie pobieranie dni muszę ogarnąć!
+
+    alarms.add(new AlarmInfo(date_to_add, DateTime.now().add(Duration(hours: 1)), vibration_to_add, drzemka_to_add, isActive_status));
   }
 
 
@@ -162,6 +184,7 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                             onChanged: (val) {
                               setState(() {
                                 hour = val;
+                                hour_to_add = hour.toInt();
                               });
                             })
                       ]
@@ -206,6 +229,7 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                             onChanged: (val) {
                               setState(() {
                                 min = val;
+                                min_to_add = min.toInt();
                               });
                             })
                       ]),
@@ -663,10 +687,10 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                   Switch(
                     value: isSwitched_wib,
                     onChanged: (value){
-                      id_wib = 1;
                       setState(() {
                         isSwitched_wib=value;
-                        print('Wibracja:'+isSwitched_wib.toString());
+                          vibration_to_add = isSwitched_wib;
+                        print('Wibracja: '+vibration_to_add.toString());
                       });
                     },
                     activeTrackColor: Colors.green.shade700,
@@ -699,10 +723,10 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                   Switch(
                     value: isSwitched_drzemka,
                     onChanged: (value){
-                      id_drzemka = 1;
                       setState(() {
                         isSwitched_drzemka=value;
-                        print('Drzemka:'+isSwitched_drzemka.toString());
+                          drzemka_to_add = isSwitched_drzemka;
+                        print('Drzemka: '+drzemka_to_add.toString());
                       });
                     },
                     activeTrackColor: Colors.green.shade700,
@@ -719,7 +743,10 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                   Container(
                     padding: EdgeInsets.only(right: 20.0, left: 8.0),
                     child: RaisedButton(
-                      onPressed: (){AddNewAlarm();},
+                      onPressed: (){
+                        AddNewAlarm();
+                      Navigator.pop(context);
+                      },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),
                       color: Colors.green.shade900,

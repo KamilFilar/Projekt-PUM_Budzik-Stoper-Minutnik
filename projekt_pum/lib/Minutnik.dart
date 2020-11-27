@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -29,15 +30,18 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
   bool checkTimer = true;
 
   void start() {
-    setState(() {
-      started = false;
-      stopped = false;
-    });
+    if (this.mounted) {
+      setState(() {
+        started = false;
+        stopped = false;
+      });
+    }
     SetsTime = (hour * 60 * 60) + (min * 60) + (sec);
     Timer.periodic(
         Duration(
           seconds: 1,
         ), (Timer t) {
+      if (this.mounted) {
       setState(() {
         if (SetsTime < 1 || checkTimer == false) {
           t.cancel();
@@ -178,7 +182,7 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                 h.toString() + ":0" + m.toString() + ":0" + s.toString();
           }
         }
-      });
+      });}
     });
   }
 
@@ -343,7 +347,11 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
       });
     });
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context){
     return Container(
@@ -391,10 +399,10 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                                 bottom: 5.0,
                               ),
                               child: Text("Godziny",
-                                style: TextStyle(
-                                  fontSize: 20.0,
+                                style: GoogleFonts.comicNeue(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
+                                  fontSize: 22.5,
                                 ),
                               ),
                             ),
@@ -435,10 +443,10 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                                 right: 15.0,
                               ),
                               child: Text("Minuty",
-                                style: TextStyle(
-                                  fontSize: 20.0,
+                                style: GoogleFonts.comicNeue(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
+                                  fontSize: 22.5,
                                 ),
                               ),
                             ),
@@ -477,10 +485,10 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                                 bottom: 5.0,
                               ),
                               child: Text("Sekundy",
-                                style: TextStyle(
-                                  fontSize: 20.0,
+                                style: GoogleFonts.comicNeue(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
+                                  fontSize: 22.5,
                                 ),
                               ),
                             ),
@@ -520,11 +528,11 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                 child: Container(
                   child: Text(
                     timeToDisplay,
-                    style: TextStyle(
-                      fontSize: 45.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
+                      style: GoogleFonts.comicNeue(
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        fontSize: 50,
+                      )
                   ),
                 ),
               ),
@@ -558,9 +566,10 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                             child: Text(
                               "Wznów",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 23,
-                                  color: Colors.white,
+                              style: GoogleFonts.comicNeue(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                fontSize: 26,
                               ),
                             ),
                           ),
@@ -600,10 +609,11 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                             child: Text(
                               "Start",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 23,
-                                  color: Colors.white
-                              ),
+                                style: GoogleFonts.comicNeue(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                )
                             ),
                           ),
                         ),
@@ -634,10 +644,11 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
                             child: Text(
                               "Stop",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 23,
-                                  color: Colors.white
-                              ),
+                                style: GoogleFonts.comicNeue(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                )
                             ),
                           ),
                         ),

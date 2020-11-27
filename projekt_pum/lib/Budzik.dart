@@ -3,22 +3,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:vibration/vibration.dart';
 
 import 'data.dart';
 import 'main.dart';
 import 'New_Alarm.dart';
 import 'Edit_Alarm.dart';
 
+
 class Budzik extends StatefulWidget {
   @override
   _Budzik createState() => _Budzik();
+
 }
 
 class _Budzik extends State<Budzik> {
+
+  DateFormat timeFormat;
+
   // Switche
   bool isSwitched = false;
-
+  // Wibracje
   //Data wyświetlana pod czasem
+  // DateFormat MydateFormat;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   initializeDateFormatting('pl').then((value) => {timeFormat = DateFormat.MMMd('pl')});
+  //
+  //   // MydateFormat = new DateFormat.MMMMd('pl');
+  // }
+  // DateFormat MydateFormat2 = new DateFormat.MMMMd('pl');
+  //Usuwanie danego alarmu
+  void DeleteAlarm(var alarm){
+    alarms.remove(alarm);
+    setState(() {});
+  }
+
+  //Edytowanie alarmu
+  void EditKonkretnyAlarm(var alarm){
+
+  }
+
   DateFormat dateFormat;
   @override
   void initState() {
@@ -27,23 +53,10 @@ class _Budzik extends State<Budzik> {
     dateFormat = new DateFormat.MMMMd('pl');
   }
 
-  //Usuwanie danego alarmu
 
-  void DeleteAlarm(var alarm){
-    alarms.remove(alarm);
-  }
-  // Pobieranie danych z listy i wyświetlanie ich
-
-  //Edytowanie alarmu
-  void EditKonkretnyAlarm(var alarm){
-
-  }
 
   @override
   Widget build(BuildContext context) {
-
-    var dateTime = new DateTime.now().add(Duration(days: 1));
-    String formattedDate = dateFormat.format(dateTime);
 
     return Container(
       color: Colors.grey.shade900,
@@ -54,7 +67,6 @@ class _Budzik extends State<Budzik> {
           Expanded(child:
           ListView(
             children: alarms.map<Widget>((alarm) {
-
               return Container(
                 margin: const EdgeInsets.only(bottom: 25),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -91,7 +103,7 @@ class _Budzik extends State<Budzik> {
                         Row(
                           children: <Widget>[
                             SizedBox(width: 8),
-                            Text(DateFormat('hh:mm').format(alarm.alarmDateTime),
+                            Text(DateFormat('Hm').format(alarm.alarmDateTime),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
@@ -101,12 +113,19 @@ class _Budzik extends State<Budzik> {
                           ],
                         ),
                         Switch(
-                          value: isSwitched,
+                          value: isSwitched = alarm.isActive,
                           onChanged: (value){
                             setState(() {
                               isSwitched=value;
-                              print(isSwitched);
+                              alarm.isActive = isSwitched;
+                              print(alarm.isActive);
                             });
+                            if(alarm.isActive==true && alarm.alarmDateTime==DateTime.now()){
+                                scheduleAlarm();
+                                alarm.alarmDateTime.day+1;
+                                Vibration.vibrate(duration: 1000);
+
+                            }
                           },
                           activeTrackColor: Colors.lightGreenAccent.shade700,
                           activeColor: Colors.white,
@@ -116,15 +135,14 @@ class _Budzik extends State<Budzik> {
                     Row(
                       children: <Widget>[
                         SizedBox(width: 10),
-                        Text(
-                          formattedDate,
+                        Text(dateFormat.format(alarm.alarmDateTime),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(width: 80),
+                        SizedBox(width: 70),
                         IconButton(
                           iconSize: 36,
                           color: Colors.lightGreenAccent.shade700,
@@ -186,7 +204,9 @@ class _Budzik extends State<Budzik> {
                       )
                   )
               else
-                Text(''),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 0),
+                ),
             ]).toList(),
           ),
           ),
@@ -202,7 +222,6 @@ class _Budzik extends State<Budzik> {
       'alarm_notif',
       'Channel for Alarm notification',
       icon: 'clock',
-      playSound: true,
       sound: RawResourceAndroidNotificationSound('song'),
       largeIcon: DrawableResourceAndroidBitmap('clock'),
     );
