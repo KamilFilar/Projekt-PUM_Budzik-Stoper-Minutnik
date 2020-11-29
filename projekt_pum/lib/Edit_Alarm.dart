@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:projekt_pum/alarm_info.dart';
+import 'package:path/path.dart';
+import 'package:projekt_pum/main.dart';
+import 'package:sqflite/sqflite.dart';
 
-import 'data.dart';
+import 'Budzik.dart';
 
 
 class EditAlarm extends StatefulWidget {
-  final AlarmInfo alarm;
-  EditAlarm({this.alarm});
+  Alarm alarm;
+  EditAlarm(this.alarm);
+
+
   @override
   _EditAlarm createState() => _EditAlarm();
 }
@@ -25,10 +29,9 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
 
 
   //Switche
-  bool isSwitched_wib = false;
-  bool isSwitched_drzemka = false;
-  int id_wib = 0;
-  int id_drzemka = 0;
+  bool isSwitched_wib = true;
+  bool isSwitched_drzemka = true;
+
 
   //Dni tygodnia
   bool pressed_pon = true;
@@ -38,30 +41,104 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
   bool pressed_pt = true;
   bool pressed_sb = true;
   bool pressed_nd = true;
-  bool pon = true;
-  bool wt = true;
-  bool sr = true;
-  bool czw = true;
-  bool pt = true;
-  bool sb = true;
-  bool nd = true;
+  int pon = 1;
+  int wt = 1;
+  int sr = 1;
+  int czw = 1;
+  int pt = 1;
+  int sb = 1;
+  int nd = 1;
 
 
+  var hour_to_add = 0; // 6
+  var min_to_add = 0; // 30
+  var day_to_add = DateTime.now().day+1;
+
+  DateTime date_to_add;
+
+  int vibration_to_add = 0;
+  int drzemka_to_add = 0;
+  int isActive_status = 0;
+
+  void CheckDay(){
+
+    bool isToday = false;
+    if(hour_to_add>=DateTime.now().hour){ //Gdzina alarmu >= Aktualna godzina
+      isToday = true;
+    }
+    if(min_to_add>DateTime.now().minute && isToday==true){ //Min. alarmu > Aktualna min i isToday = true
+      day_to_add = DateTime.now().day;
+    }
+    else if(hour_to_add>DateTime.now().hour){ // Gdzina alarmu > Aktualna godzina
+      day_to_add = DateTime.now().day;
+    }
+    date_to_add = DateTime(DateTime.now().year, DateTime.now().month, day_to_add, hour_to_add, min_to_add);
 
 
+    var pon=1;
+    var wt=2;
+    var sr=3;
+    var czw=4;
+    var pt=5;
+    var sb=6;
+    var nd=7;
 
+    var now = new DateTime.now().add(Duration(days: 1));
 
+    if(pressed_pon == false && now.weekday==pon){ // Jeżeli jutro jest pon a nie jest zaznaczony to 0
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_wt == false && now.weekday==wt){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_sr == false && now.weekday==sr){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_czw == false && now.weekday==czw){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_pt == false && now.weekday==pt){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_sb == false && now.weekday==sb){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_nd == false && now.weekday==nd){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
 
+  }
+
+  var db;
+
+  insert_to_DB(alarm) async{
+    Database db = await openDatabase(join(await getDatabasesPath(),'AlarmDB.db'));
+    await db.insert('BudzikEntity',alarm.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
+    // await db.query('BudzikEntity').then((value) => print(value));
+    print("Dodano pomyślnie!");
+  }
+
+  Future<void> updateAlarm(Alarm alarm) async {
+    Database db = await openDatabase(join(await getDatabasesPath(),'AlarmDB.db'));
+    await db.insert('BudzikEntity',alarm.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
+    print("Po aktualizacji: "+alarm.toString2());
+  }
 
   @override
   Widget build(BuildContext context) {
-    AlarmInfo copyOfAlarm = AlarmInfo.copy(widget.alarm);
-
+    print(widget.alarm.toString());
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
       appBar: AppBar(
         toolbarHeight: 60,
-        title: Text("Edytuj alarm",
+        title: Text("Dodaj nowy alarm",
           style: TextStyle(
               fontSize: 23
           ),
@@ -159,13 +236,14 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                                 color: Colors.white,
                                 fontSize: 30
                             ),
-                            initialValue: hour,
+                            initialValue: widget.alarm.Alarm_DateTime.hour,
                             minValue: 0,
                             maxValue: 23,
                             listViewWidth: 60.0,
                             onChanged: (val) {
                               setState(() {
                                 hour = val;
+                                hour_to_add = hour.toInt();
                               });
                             })
                       ]
@@ -203,13 +281,14 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                                 color: Colors.white,
                                 fontSize: 30
                             ),
-                            initialValue: min,
+                            initialValue: widget.alarm.Alarm_DateTime.minute,
                             minValue: 0,
                             maxValue: 59,
                             listViewWidth: 60.0,
                             onChanged: (val) {
                               setState(() {
                                 min = val;
+                                min_to_add = min.toInt();
                               });
                             })
                       ]),
@@ -251,7 +330,12 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_pon = !pressed_pon;
-                              pon = !pon;
+                              if(pressed_pon==false){
+                                pon = 0;
+                              }
+                              if(pressed_pon==true){
+                                pon = 1;
+                              }
                             });
                             print('Poniedziałek: '+pon.toString());
                             print('Presed: '+pressed_pon.toString());
@@ -308,7 +392,12 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_wt = !pressed_wt;
-                              wt = !wt;
+                              if(pressed_wt==false){
+                                wt = 0;
+                              }
+                              if(pressed_wt==true){
+                                wt = 1;
+                              }
                             });
                             print('Wtorek: '+wt.toString());
                             print('Presed: '+pressed_wt.toString());
@@ -365,7 +454,12 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_sr = !pressed_sr;
-                              sr = !sr;
+                              if(pressed_sr == false){
+                                sr = 0;
+                              }
+                              if(pressed_sr == true){
+                                sr = 1;
+                              }
                             });
                             print('środa: '+sr.toString());
                             print('Presed: '+pressed_sr.toString());
@@ -422,7 +516,12 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_czw = !pressed_czw;
-                              czw = !czw;
+                              if(pressed_czw == false){
+                                czw = 0;
+                              }
+                              if(pressed_czw == true){
+                                czw= 1;
+                              }
                             });
                             print('Czwartek: '+czw.toString());
                             print('Presed: '+pressed_czw.toString());
@@ -492,9 +591,14 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_pt = !pressed_pt;
-                              pt = !pt;
+                              if(pressed_pt == false){
+                                pt = 0;
+                              }
+                              if(pressed_pt == true){
+                                pt = 1;
+                              }
                             });
-                            print('Poniedziałek: '+pt.toString());
+                            print('Piątek: '+pt.toString());
                             print('Presed: '+pressed_pt.toString());
                           },
                           child: Ink(
@@ -549,9 +653,14 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_sb = !pressed_sb;
-                              sb = !sb;
+                              if(pressed_sb == false){
+                                sb = 0;
+                              }
+                              if(pressed_sb == true){
+                                sb = 1;
+                              }
                             });
-                            print('Poniedziałek: '+sb.toString());
+                            print('Sobota: '+sb.toString());
                             print('Presed: '+pressed_sb.toString());
                           },
                           child: Ink(
@@ -606,9 +715,14 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_nd = !pressed_nd;
-                              nd = !nd;
+                              if(pressed_nd == false){
+                                nd = 0;
+                              }
+                              if(pressed_nd == true){
+                                nd = 1;
+                              }
                             });
-                            print('Poniedziałek: '+nd.toString());
+                            print('Niedziela: '+nd.toString());
                             print('Presed: '+pressed_nd.toString());
                           },
                           child: Ink(
@@ -665,12 +779,17 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                     ],
                   ),
                   Switch(
-                    value: isSwitched_wib,
+                    value: widget.alarm.Alarm_Vibration==1?true:false,
                     onChanged: (value){
-                      id_wib = 1;
                       setState(() {
                         isSwitched_wib=value;
-                        print('Wibracja:'+isSwitched_wib.toString());
+                        if(isSwitched_wib==true){
+                          vibration_to_add=1;
+                        }
+                        else{
+                          vibration_to_add=0;
+                        }
+                        print('Wibracja: '+vibration_to_add.toString());
                       });
                     },
                     activeTrackColor: Colors.green.shade700,
@@ -701,12 +820,17 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                     ],
                   ),
                   Switch(
-                    value: isSwitched_drzemka,
+                    value: widget.alarm.Alarm_Drzemka==1?true:false,
                     onChanged: (value){
-                      id_drzemka = 1;
                       setState(() {
                         isSwitched_drzemka=value;
-                        print('Drzemka:'+isSwitched_drzemka.toString());
+                        if(isSwitched_drzemka==true){
+                          drzemka_to_add=1;
+                        }
+                        else{
+                          drzemka_to_add=0;
+                        }
+                        print('Drzemka: '+drzemka_to_add.toString());
                       });
                     },
                     activeTrackColor: Colors.green.shade700,
@@ -724,8 +848,10 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                     padding: EdgeInsets.only(right: 20.0, left: 8.0),
                     child: RaisedButton(
                       onPressed: (){
-                        alarms.remove(widget.alarm);
-                        alarms.add(copyOfAlarm);
+                        CheckDay();
+                        updateAlarm(Alarm(ID_Alarm: widget.alarm.ID_Alarm, Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
+                            Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
+                        Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),

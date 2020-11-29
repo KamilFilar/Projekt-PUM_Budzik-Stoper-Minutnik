@@ -1,15 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
-import 'alarm_info.dart';
-import 'data.dart';
+import 'main.dart';
+import 'Budzik.dart';
 
 class NewAlarm extends StatefulWidget {
   @override
   _NewAlarm createState() => _NewAlarm();
 }
+getLastID() async{
+  Database db = await openDatabase(join(await getDatabasesPath(),'AlarmDB.db'));
+  await db.rawQuery('SELECT ID_Alarm FROM BudzikEntity ORDER BY ID_Alarm DESC limit 1').then((value) => print(value));
 
+  return db.rawQuery('SELECT ID_Alarm FROM BudzikEntity ORDER BY ID_Alarm DESC limit 1');
+}
 class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
 
   //Numberpicker
@@ -21,8 +28,8 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
   int min = 0;
 
   //Switche
-  bool isSwitched_wib = false;
-  bool isSwitched_drzemka = false;
+  bool isSwitched_wib = true;
+  bool isSwitched_drzemka = true;
 
 
   //Dni tygodnia
@@ -33,27 +40,30 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
   bool pressed_pt = true;
   bool pressed_sb = true;
   bool pressed_nd = true;
-  bool pon = true;
-  bool wt = true;
-  bool sr = true;
-  bool czw = true;
-  bool pt = true;
-  bool sb = true;
-  bool nd = true;
+  int pon = 1;
+  int wt = 1;
+  int sr = 1;
+  int czw = 1;
+  int pt = 1;
+  int sb = 1;
+  int nd = 1;
+
 
 
   //Dodawanie nowego alarmu
+  var id_to_add = getLastID(); // zrobić żeby brało ostatnie +1
   var hour_to_add = 0; // 6
   var min_to_add = 0; // 30
   var day_to_add = DateTime.now().day+1;
 
   DateTime date_to_add;
-  DateTime whatDays;
-  bool vibration_to_add = false;
-  bool drzemka_to_add = false;
-  bool isActive_status = true;
 
-  void AddNewAlarm(){
+  int vibration_to_add = 0;
+  int drzemka_to_add = 0;
+  int isActive_status = 0;
+
+  void CheckDay(){
+
     bool isToday = false;
     if(hour_to_add>=DateTime.now().hour){ //Gdzina alarmu >= Aktualna godzina
       isToday = true;
@@ -66,10 +76,58 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
     }
     date_to_add = DateTime(DateTime.now().year, DateTime.now().month, day_to_add, hour_to_add, min_to_add);
 
-    // Jakoś logistycznie pobieranie dni muszę ogarnąć!
 
-    alarms.add(new AlarmInfo(date_to_add, DateTime.now().add(Duration(hours: 1)), vibration_to_add, drzemka_to_add, isActive_status));
+    var pon=1;
+    var wt=2;
+    var sr=3;
+    var czw=4;
+    var pt=5;
+    var sb=6;
+    var nd=7;
+
+    var now = new DateTime.now().add(Duration(days: 1));
+
+    if(pressed_pon == false && now.weekday==pon){ // Jeżeli jutro jest pon a nie jest zaznaczony to 0
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_wt == false && now.weekday==wt){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_sr == false && now.weekday==sr){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_czw == false && now.weekday==czw){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_pt == false && now.weekday==pt){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_sb == false && now.weekday==sb){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+    if(pressed_nd == false && now.weekday==nd){
+      isActive_status = 0;
+      date_to_add = date_to_add.add(Duration(days: 1));
+    }
+
   }
+
+  var db;
+
+  insert_to_DB(alarm) async{
+    Database db = await openDatabase(join(await getDatabasesPath(),'AlarmDB.db'));
+    await db.insert('BudzikEntity',alarm.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
+    // await db.query('BudzikEntity').then((value) => print(value));
+    print("Dodano pomyślnie!");
+  }
+
+
 
 
 
@@ -271,7 +329,12 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_pon = !pressed_pon;
-                              pon = !pon;
+                              if(pressed_pon==false){
+                                pon = 0;
+                              }
+                              if(pressed_pon==true){
+                                pon = 1;
+                              }
                             });
                             print('Poniedziałek: '+pon.toString());
                             print('Presed: '+pressed_pon.toString());
@@ -328,7 +391,12 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_wt = !pressed_wt;
-                              wt = !wt;
+                              if(pressed_wt==false){
+                                wt = 0;
+                              }
+                              if(pressed_wt==true){
+                                wt = 1;
+                              }
                             });
                             print('Wtorek: '+wt.toString());
                             print('Presed: '+pressed_wt.toString());
@@ -385,7 +453,12 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_sr = !pressed_sr;
-                              sr = !sr;
+                              if(pressed_sr == false){
+                                sr = 0;
+                              }
+                              if(pressed_sr == true){
+                                sr = 1;
+                              }
                             });
                             print('środa: '+sr.toString());
                             print('Presed: '+pressed_sr.toString());
@@ -442,7 +515,12 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_czw = !pressed_czw;
-                              czw = !czw;
+                              if(pressed_czw == false){
+                                czw = 0;
+                              }
+                              if(pressed_czw == true){
+                                czw= 1;
+                              }
                             });
                             print('Czwartek: '+czw.toString());
                             print('Presed: '+pressed_czw.toString());
@@ -512,9 +590,14 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_pt = !pressed_pt;
-                              pt = !pt;
+                              if(pressed_pt == false){
+                                pt = 0;
+                              }
+                              if(pressed_pt == true){
+                                pt = 1;
+                              }
                             });
-                            print('Poniedziałek: '+pt.toString());
+                            print('Piątek: '+pt.toString());
                             print('Presed: '+pressed_pt.toString());
                           },
                           child: Ink(
@@ -569,9 +652,14 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_sb = !pressed_sb;
-                              sb = !sb;
+                              if(pressed_sb == false){
+                                sb = 0;
+                              }
+                              if(pressed_sb == true){
+                                sb = 1;
+                              }
                             });
-                            print('Poniedziałek: '+sb.toString());
+                            print('Sobota: '+sb.toString());
                             print('Presed: '+pressed_sb.toString());
                           },
                           child: Ink(
@@ -626,9 +714,14 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                           onPressed: () {
                             setState(() {
                               pressed_nd = !pressed_nd;
-                              nd = !nd;
+                              if(pressed_nd == false){
+                                nd = 0;
+                              }
+                              if(pressed_nd == true){
+                                nd = 1;
+                              }
                             });
-                            print('Poniedziałek: '+nd.toString());
+                            print('Niedziela: '+nd.toString());
                             print('Presed: '+pressed_nd.toString());
                           },
                           child: Ink(
@@ -689,7 +782,12 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                     onChanged: (value){
                       setState(() {
                         isSwitched_wib=value;
-                          vibration_to_add = isSwitched_wib;
+                          if(isSwitched_wib==true){
+                            vibration_to_add=1;
+                          }
+                          else{
+                            vibration_to_add=0;
+                          }
                         print('Wibracja: '+vibration_to_add.toString());
                       });
                     },
@@ -725,7 +823,12 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                     onChanged: (value){
                       setState(() {
                         isSwitched_drzemka=value;
-                          drzemka_to_add = isSwitched_drzemka;
+                        if(isSwitched_drzemka==true){
+                          drzemka_to_add=1;
+                        }
+                        else{
+                          drzemka_to_add=0;
+                        }
                         print('Drzemka: '+drzemka_to_add.toString());
                       });
                     },
@@ -744,8 +847,10 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                     padding: EdgeInsets.only(right: 20.0, left: 8.0),
                     child: RaisedButton(
                       onPressed: (){
-                        AddNewAlarm();
-                      Navigator.pop(context);
+                        CheckDay();
+                        insert_to_DB(Alarm(Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
+                        Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
+                        Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),
