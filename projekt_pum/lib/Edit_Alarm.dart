@@ -12,7 +12,6 @@ class EditAlarm extends StatefulWidget {
   Alarm alarm;
   EditAlarm(this.alarm);
 
-
   @override
   _EditAlarm createState() => _EditAlarm();
 }
@@ -23,10 +22,8 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
   void initState() {
     super.initState();
   }
-
-  int hour = 6;
-  int min = 30;
-
+  int hour = 0;
+  int min = 0;
 
   //Switche
   bool isSwitched_wib = true;
@@ -50,6 +47,8 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
   int nd = 1;
 
 
+
+  //Dodawanie nowego alarmu
   var hour_to_add = 0; // 6
   var min_to_add = 0; // 30
   var day_to_add = DateTime.now().day+1;
@@ -61,7 +60,6 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
   int isActive_status = 0;
 
   void CheckDay(){
-
     bool isToday = false;
     if(hour_to_add>=DateTime.now().hour){ //Gdzina alarmu >= Aktualna godzina
       isToday = true;
@@ -73,8 +71,6 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
       day_to_add = DateTime.now().day;
     }
     date_to_add = DateTime(DateTime.now().year, DateTime.now().month, day_to_add, hour_to_add, min_to_add);
-
-
     var pon=1;
     var wt=2;
     var sr=3;
@@ -82,63 +78,51 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
     var pt=5;
     var sb=6;
     var nd=7;
-
     var now = new DateTime.now().add(Duration(days: 1));
-
-    if(pressed_pon == false && now.weekday==pon){ // Jeżeli jutro jest pon a nie jest zaznaczony to 0
-      isActive_status = 0;
+    if(pressed_pon == false && now.weekday==pon){
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_wt == false && now.weekday==wt){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_sr == false && now.weekday==sr){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_czw == false && now.weekday==czw){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_pt == false && now.weekday==pt){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_sb == false && now.weekday==sb){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_nd == false && now.weekday==nd){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
-
   }
 
   var db;
-
-  insert_to_DB(alarm) async{
-    Database db = await openDatabase(join(await getDatabasesPath(),'AlarmDB.db'));
-    await db.insert('BudzikEntity',alarm.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
-    // await db.query('BudzikEntity').then((value) => print(value));
-    print("Dodano pomyślnie!");
-  }
-
   Future<void> updateAlarm(Alarm alarm) async {
     Database db = await openDatabase(join(await getDatabasesPath(),'AlarmDB.db'));
     await db.insert('BudzikEntity',alarm.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
-    print("Po aktualizacji: "+alarm.toString2());
+    print("Po aktualizacji: "+alarm.toString());
   }
+
 
   @override
   Widget build(BuildContext context) {
-    print(widget.alarm.toString());
+
+    Alarm copyOfAlarm = Alarm.copy(widget.alarm);
+
+    hour = copyOfAlarm.Alarm_DateTime.hour;
+    pressed_pon = copyOfAlarm.Monday==1?true:false;
+
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
       appBar: AppBar(
         toolbarHeight: 60,
-        title: Text("Dodaj nowy alarm",
+        title: Text("Edytuj alarm",
           style: TextStyle(
               fontSize: 23
           ),
@@ -236,15 +220,19 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                                 color: Colors.white,
                                 fontSize: 30
                             ),
-                            initialValue: widget.alarm.Alarm_DateTime.hour,
+                            initialValue: hour,
                             minValue: 0,
                             maxValue: 23,
                             listViewWidth: 60.0,
                             onChanged: (val) {
                               setState(() {
+                                print(val);
                                 hour = val;
-                                hour_to_add = hour.toInt();
+                                print("print "+copyOfAlarm.toString());
+                                copyOfAlarm.Alarm_DateTime=new DateTime(copyOfAlarm.Alarm_DateTime.year,copyOfAlarm.Alarm_DateTime.month,copyOfAlarm.Alarm_DateTime.day,val,copyOfAlarm.Alarm_DateTime.minute,0,0);
+                                print("after "+copyOfAlarm.toString());
                               });
+                                hour_to_add = hour;
                             })
                       ]
                   ),
@@ -281,7 +269,7 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                                 color: Colors.white,
                                 fontSize: 30
                             ),
-                            initialValue: widget.alarm.Alarm_DateTime.minute,
+                            initialValue: min,
                             minValue: 0,
                             maxValue: 59,
                             listViewWidth: 60.0,
@@ -337,6 +325,7 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                                 pon = 1;
                               }
                             });
+                            print(copyOfAlarm.toString());
                             print('Poniedziałek: '+pon.toString());
                             print('Presed: '+pressed_pon.toString());
                           },
@@ -779,7 +768,7 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                     ],
                   ),
                   Switch(
-                    value: widget.alarm.Alarm_Vibration==1?true:false,
+                    value: isSwitched_wib,
                     onChanged: (value){
                       setState(() {
                         isSwitched_wib=value;
@@ -820,7 +809,7 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                     ],
                   ),
                   Switch(
-                    value: widget.alarm.Alarm_Drzemka==1?true:false,
+                    value: isSwitched_drzemka,
                     onChanged: (value){
                       setState(() {
                         isSwitched_drzemka=value;
@@ -849,8 +838,9 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                     child: RaisedButton(
                       onPressed: (){
                         CheckDay();
-                        updateAlarm(Alarm(ID_Alarm: widget.alarm.ID_Alarm, Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
-                            Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
+                        updateAlarm(widget.alarm);
+                        // updateAlarm(Alarm(ID_Alarm: widget.alarm.ID_Alarm.toInt(), Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
+                        //     Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
                         Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),

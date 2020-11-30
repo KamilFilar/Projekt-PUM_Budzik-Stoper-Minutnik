@@ -21,7 +21,7 @@ class _Stoper extends State<Stoper> {
   String SaveTimeString = "00:00:00";
 
   var swatch = Stopwatch();
-  final dur = const Duration(seconds: 1);
+  final dur = const Duration(milliseconds: 1);
 
   void keepruning() {
     if (swatch.isRunning) {
@@ -243,7 +243,8 @@ class _Stoper extends State<Stoper> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   RaisedButton(
-                                    onPressed: (){isrunning ? {isButtonBlocked ? print("Limit pomiarów!") :{stop2 ? null : showPartTime()}} : print("Stoper nie pracuje!"); },
+                                    onPressed: (){isrunning ? {isButtonBlocked ? print("Osiągnięto limit pomiarów!")
+                                        :{stop2 ? null : showPartTime()}} : print("Stoper nie pracuje!"); },
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                                     padding: EdgeInsets.all(3.0),
                                     color: isButtonBlocked ? Colors.black : Colors.green.shade900,

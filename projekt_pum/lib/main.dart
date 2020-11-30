@@ -64,6 +64,10 @@ class Alarm {
       this.Saturday,
       this.Sunday});
 
+  Alarm.copy(Alarm alarm): this(ID_Alarm: alarm.ID_Alarm, Alarm_DateTime: alarm.Alarm_DateTime,
+  Alarm_Vibration: alarm.Alarm_Vibration, Alarm_Drzemka: alarm.Alarm_Drzemka, Alarm_isActive: alarm.Alarm_isActive,
+  Monday: alarm.Monday, Tuesday: alarm.Tuesday, Wednesday: alarm.Wednesday, Thursday: alarm.Thursday, Friday: alarm.Friday, Saturday: alarm.Saturday, Sunday: alarm.Sunday);
+
   Alarm.fromMap(Map<String, dynamic> map) {
     this.ID_Alarm = map['ID_Alarm'];
     this.Alarm_DateTime = DateTime.parse(map['Alarm_DateTime']);
@@ -112,12 +116,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Time',
-      home: MyHomePage(),
+      home: MyHomePage(0),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  int selectedPage;
+  MyHomePage(this.selectedPage);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -165,87 +171,94 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     tb = TabController(length: 3, vsync: this);
     super.initState();
     initDb();
+    setState(() {
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Projekt PUM',
-          style: GoogleFonts.comicNeue(
-              fontWeight: FontWeight.w700,
-              fontSize: 30,
-              color: Colors.lightGreenAccent.shade400),
-        ),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[
-                  Colors.grey.shade900,
-                  Colors.green.shade900,
-                  Colors.green.shade700,
-                  Colors.grey.shade900,
-                ]),
-            border: Border.all(
-              width: 1,
-              color: Colors.green.shade900,
+    return DefaultTabController(
+
+      initialIndex: widget.selectedPage,
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Projekt PUM',
+            style: GoogleFonts.comicNeue(
+                fontWeight: FontWeight.w700,
+                fontSize: 30,
+                color: Colors.lightGreenAccent.shade400),
+          ),
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    Colors.grey.shade900,
+                    Colors.green.shade900,
+                    Colors.green.shade700,
+                    Colors.grey.shade900,
+                  ]),
+              border: Border.all(
+                width: 1,
+                color: Colors.green.shade900,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.lightGreenAccent.shade700.withOpacity(0.8),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                  offset: Offset(4, 4),
+                ),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.lightGreenAccent.shade700.withOpacity(0.8),
-                blurRadius: 8,
-                spreadRadius: 2,
-                offset: Offset(4, 4),
+          ),
+          bottom: TabBar(
+            indicatorColor: Colors.lightGreenAccent.shade700,
+            tabs: <Widget>[
+              Text(
+                'Budzik',
+                style: GoogleFonts.comicNeue(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 26,
+                ),
+              ),
+              Text(
+                "Stoper",
+                style: GoogleFonts.comicNeue(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 26,
+                ),
+              ),
+              Text(
+                "Minutnik",
+                style: GoogleFonts.comicNeue(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 26,
+                ),
               ),
             ],
+            labelPadding: EdgeInsets.only(
+              bottom: 10.0,
+            ),
+            labelStyle: TextStyle(
+              fontSize: 20.0,
+            ),
+            unselectedLabelColor: Colors.white,
+            controller: tb,
           ),
         ),
-        bottom: TabBar(
-          indicatorColor: Colors.lightGreenAccent.shade700,
-          tabs: <Widget>[
-            Text(
-              'Budzik',
-              style: GoogleFonts.comicNeue(
-                fontWeight: FontWeight.w700,
-                fontSize: 26,
-              ),
-            ),
-            Text(
-              "Stoper",
-              style: GoogleFonts.comicNeue(
-                fontWeight: FontWeight.w700,
-                fontSize: 26,
-              ),
-            ),
-            Text(
-              "Minutnik",
-              style: GoogleFonts.comicNeue(
-                fontWeight: FontWeight.w700,
-                fontSize: 26,
-              ),
-            ),
+        body: TabBarView(
+          children: <Widget>[
+            alarm(),
+            stopwach(),
+            timer(),
           ],
-          labelPadding: EdgeInsets.only(
-            bottom: 10.0,
-          ),
-          labelStyle: TextStyle(
-            fontSize: 20.0,
-          ),
-          unselectedLabelColor: Colors.white,
           controller: tb,
         ),
-      ),
-      body: TabBarView(
-        children: <Widget>[
-          alarm(),
-          stopwach(),
-          timer(),
-        ],
-        controller: tb,
       ),
     );
   }

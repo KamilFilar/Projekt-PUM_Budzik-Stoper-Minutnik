@@ -17,6 +17,8 @@ getLastID() async{
 
   return db.rawQuery('SELECT ID_Alarm FROM BudzikEntity ORDER BY ID_Alarm DESC limit 1');
 }
+
+
 class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
 
   //Numberpicker
@@ -87,32 +89,26 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
 
     var now = new DateTime.now().add(Duration(days: 1));
 
-    if(pressed_pon == false && now.weekday==pon){ // Jeżeli jutro jest pon a nie jest zaznaczony to 0
-      isActive_status = 0;
+
+    if(pressed_pon == false && now.weekday==pon){
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_wt == false && now.weekday==wt){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_sr == false && now.weekday==sr){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_czw == false && now.weekday==czw){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_pt == false && now.weekday==pt){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_sb == false && now.weekday==sb){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
     if(pressed_nd == false && now.weekday==nd){
-      isActive_status = 0;
       date_to_add = date_to_add.add(Duration(days: 1));
     }
 
@@ -850,7 +846,8 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                         CheckDay();
                         insert_to_DB(Alarm(Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
                         Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
-                        Navigator.pop(context);
+                        // Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(0)));
                       },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),

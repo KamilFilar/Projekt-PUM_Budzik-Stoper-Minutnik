@@ -26,7 +26,6 @@ class _Minutnik extends State<Minutnik> with TickerProviderStateMixin {
 
   bool started = true;
   bool stopped = true;
-
   bool checkTimer = true;
 
   void start() {
