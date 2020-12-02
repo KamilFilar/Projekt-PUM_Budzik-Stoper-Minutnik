@@ -4,9 +4,23 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:path/path.dart';
 import 'package:projekt_pum/main.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'Budzik.dart';
 
+Future<List<Alarm>> getAlarms() async {
+  List<Map<String, dynamic>> alarmsDB;
+  Database db =
+  await openDatabase(join(await getDatabasesPath(), 'AlarmDB.db'));
+  await db.query('BudzikEntity').then((value) => alarmsDB = value);
+
+  List<Alarm> alarms=List.generate(alarmsDB.length, (index) {
+    Alarm alarm = Alarm.fromMap(alarmsDB[index]);
+    return alarm;
+  });
+  // print(alarms);
+  return alarms;
+}
 
 class EditAlarm extends StatefulWidget {
   Alarm alarm;
@@ -55,9 +69,9 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
 
   DateTime date_to_add;
 
-  int vibration_to_add = 0;
-  int drzemka_to_add = 0;
-  int isActive_status = 0;
+  int vibration_to_add = 1;
+  int drzemka_to_add = 1;
+  int isActive_status = 1;
 
   void CheckDay(){
     bool isToday = false;
@@ -109,14 +123,19 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
     print("Po aktualizacji: "+alarm.toString());
   }
 
+  checkAlarmExist(Alarm A1) async{
+    List<Alarm> alarms = await getAlarms();
+    for(var alarm in alarms)
+    {
+      if(alarm.compare(alarm, A1)){
+        return true;
+      }
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    Alarm copyOfAlarm = Alarm.copy(widget.alarm);
-
-    hour = copyOfAlarm.Alarm_DateTime.hour;
-    pressed_pon = copyOfAlarm.Monday==1?true:false;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
@@ -158,8 +177,19 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
       body: Container(
         child: Column(
           children: <Widget>[
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 25, bottom: 20),
+                child: Text("UWAGA! Ustawiono podstawowe dane.",
+                  style: GoogleFonts.comicNeue(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 21,
+                      color: Colors.redAccent.shade700),
+                ),
+              ),
+            ),
             Container(
-              margin: const EdgeInsets.only(top: 40, left: 70, right: 70),
+              margin: const EdgeInsets.only(top: 10, left: 70, right: 70),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -226,13 +256,9 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                             listViewWidth: 60.0,
                             onChanged: (val) {
                               setState(() {
-                                print(val);
                                 hour = val;
-                                print("print "+copyOfAlarm.toString());
-                                copyOfAlarm.Alarm_DateTime=new DateTime(copyOfAlarm.Alarm_DateTime.year,copyOfAlarm.Alarm_DateTime.month,copyOfAlarm.Alarm_DateTime.day,val,copyOfAlarm.Alarm_DateTime.minute,0,0);
-                                print("after "+copyOfAlarm.toString());
+                                hour_to_add = hour.toInt();
                               });
-                                hour_to_add = hour;
                             })
                       ]
                   ),
@@ -286,7 +312,7 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
             Container(
               child: Container(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 25.0, bottom: 25.0),
+                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 ),
               ),
             ),
@@ -325,7 +351,6 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                                 pon = 1;
                               }
                             });
-                            print(copyOfAlarm.toString());
                             print('Poniedziałek: '+pon.toString());
                             print('Presed: '+pressed_pon.toString());
                           },
@@ -836,12 +861,24 @@ class _EditAlarm extends State<EditAlarm> with TickerProviderStateMixin {
                   Container(
                     padding: EdgeInsets.only(right: 20.0, left: 8.0),
                     child: RaisedButton(
-                      onPressed: (){
+                      onPressed: () async {
                         CheckDay();
-                        updateAlarm(widget.alarm);
-                        // updateAlarm(Alarm(ID_Alarm: widget.alarm.ID_Alarm.toInt(), Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
-                        //     Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
-                        Navigator.pop(context);
+                        if(pon==0 && wt==0 && sr==0 && czw==0 && pt==0 && sb==0 && nd==0){
+                          pon = wt = sr = czw = pt = sb = nd = 1;
+                          print("Ustawiono wartości domyślne dla dni ponieważ nie wybrano żadnego!");
+                        }
+                        bool test = await checkAlarmExist(Alarm(Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
+                            Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
+                        print("Bool: "+test.toString());
+                        if(test){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(0)));
+                        }
+                        else{
+                          updateAlarm(Alarm(Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
+                              Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(0)));
+                        }
                       },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),

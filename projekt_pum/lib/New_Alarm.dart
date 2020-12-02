@@ -3,29 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:async';
 
 import 'main.dart';
-import 'Budzik.dart';
+
+Future<List<Alarm>> getAlarms() async {
+  List<Map<String, dynamic>> alarmsDB;
+  Database db =
+  await openDatabase(join(await getDatabasesPath(), 'AlarmDB.db'));
+  await db.query('BudzikEntity').then((value) => alarmsDB = value);
+
+  List<Alarm> alarms=List.generate(alarmsDB.length, (index) {
+    Alarm alarm = Alarm.fromMap(alarmsDB[index]);
+    return alarm;
+  });
+  // print(alarms);
+  return alarms;
+}
 
 class NewAlarm extends StatefulWidget {
+  List<Alarm> alarms;
+  NewAlarm({this.alarms});
+
   @override
   _NewAlarm createState() => _NewAlarm();
 }
-getLastID() async{
-  Database db = await openDatabase(join(await getDatabasesPath(),'AlarmDB.db'));
-  await db.rawQuery('SELECT ID_Alarm FROM BudzikEntity ORDER BY ID_Alarm DESC limit 1').then((value) => print(value));
-
-  return db.rawQuery('SELECT ID_Alarm FROM BudzikEntity ORDER BY ID_Alarm DESC limit 1');
-}
-
 
 class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
 
+  // Future<List<Alarm>> _alarms;
   //Numberpicker
   @override
   void initState() {
     super.initState();
+   // _alarms = getAlarms();
   }
+
   int hour = 0;
   int min = 0;
 
@@ -50,19 +63,16 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
   int sb = 1;
   int nd = 1;
 
-
-
   //Dodawanie nowego alarmu
-  var id_to_add = getLastID(); // zrobić żeby brało ostatnie +1
   var hour_to_add = 0; // 6
   var min_to_add = 0; // 30
   var day_to_add = DateTime.now().day+1;
 
   DateTime date_to_add;
 
-  int vibration_to_add = 0;
-  int drzemka_to_add = 0;
-  int isActive_status = 0;
+  int vibration_to_add = 1;
+  int drzemka_to_add = 1;
+  int isActive_status = 1;
 
   void CheckDay(){
 
@@ -89,7 +99,7 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
 
     var now = new DateTime.now().add(Duration(days: 1));
 
-
+// Następny dzień
     if(pressed_pon == false && now.weekday==pon){
       date_to_add = date_to_add.add(Duration(days: 1));
     }
@@ -123,6 +133,17 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
     print("Dodano pomyślnie!");
   }
 
+
+  checkAlarmExist(Alarm A1) async{
+    List<Alarm> alarms = await getAlarms();
+    for(var alarm in alarms)
+      {
+        if(alarm.compare(alarm, A1)){
+          return true;
+        }
+      }
+    return false;
+  }
 
 
 
@@ -842,12 +863,25 @@ class _NewAlarm extends State<NewAlarm> with TickerProviderStateMixin {
                   Container(
                     padding: EdgeInsets.only(right: 20.0, left: 8.0),
                     child: RaisedButton(
-                      onPressed: (){
+                      onPressed: () async {
                         CheckDay();
-                        insert_to_DB(Alarm(Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
-                        Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
-                        // Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(0)));
+                        if(pon==0 && wt==0 && sr==0 && czw==0 && pt==0 && sb==0 && nd==0){
+                          pon = wt = sr = czw = pt = sb = nd = 1;
+                          print("Ustawiono wartości domyślne dla dni ponieważ nie wybrano żadnego!");
+                        }
+                        bool test = await checkAlarmExist(Alarm(Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
+                            Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
+                        print("Bool: "+test.toString());
+                        if(test){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(0)));
+                        }
+                        else{
+                          insert_to_DB(Alarm(Alarm_DateTime: date_to_add, Alarm_Vibration: vibration_to_add, Alarm_Drzemka: drzemka_to_add, Alarm_isActive: 1,
+                              Monday: pon, Tuesday: wt, Wednesday: sr, Thursday: czw, Friday: pt, Saturday: sb, Sunday: nd));
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(0)));
+                        }
+
                       },
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                       padding: EdgeInsets.all(0.0),

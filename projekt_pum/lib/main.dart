@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -64,11 +63,25 @@ class Alarm {
       this.Saturday,
       this.Sunday});
 
-  Alarm.copy(Alarm alarm): this(ID_Alarm: alarm.ID_Alarm, Alarm_DateTime: alarm.Alarm_DateTime,
-  Alarm_Vibration: alarm.Alarm_Vibration, Alarm_Drzemka: alarm.Alarm_Drzemka, Alarm_isActive: alarm.Alarm_isActive,
-  Monday: alarm.Monday, Tuesday: alarm.Tuesday, Wednesday: alarm.Wednesday, Thursday: alarm.Thursday, Friday: alarm.Friday, Saturday: alarm.Saturday, Sunday: alarm.Sunday);
+
+  bool compare(Alarm alarmA, Alarm alarmB){
+     if(alarmA.Alarm_DateTime==alarmB.Alarm_DateTime)
+       if(alarmA.Alarm_Drzemka==alarmB.Alarm_Drzemka)
+         if(alarmA.Alarm_Vibration==alarmB.Alarm_Vibration)
+           if(alarmA.Alarm_isActive==alarmB.Alarm_isActive)
+             if(alarmA.Monday==alarmB.Monday)
+               if(alarmA.Tuesday==alarmB.Tuesday)
+                 if(alarmA.Wednesday==alarmB.Wednesday)
+                   if(alarmA.Thursday==alarmB.Thursday)
+                     if(alarmA.Friday==alarmB.Friday)
+                       if(alarmA.Saturday==alarmB.Saturday)
+                         if(alarmA.Sunday==alarmB.Sunday)
+                           return true;
+     return false;
+  }
 
   Alarm.fromMap(Map<String, dynamic> map) {
+    //print(map.toString());
     this.ID_Alarm = map['ID_Alarm'];
     this.Alarm_DateTime = DateTime.parse(map['Alarm_DateTime']);
     this.Alarm_Vibration = map['Alarm_Vibration'];
@@ -99,6 +112,15 @@ class Alarm {
       'Sunday': Sunday,
     };
   }
+
+  Alarm.copy(Alarm alarm): this(ID_Alarm: alarm.ID_Alarm, Alarm_DateTime: alarm.Alarm_DateTime,
+      Alarm_Vibration: alarm.Alarm_Vibration, Alarm_Drzemka: alarm.Alarm_Drzemka, Alarm_isActive: alarm.Alarm_isActive,
+      Monday: alarm.Monday, Tuesday: alarm.Tuesday, Wednesday: alarm.Wednesday, Thursday: alarm.Thursday, Friday: alarm.Friday, Saturday: alarm.Saturday, Sunday: alarm.Sunday);
+
+  Alarm.copy2(Alarm alarm,DateTime newDateTime, int newDrzemka): this(ID_Alarm: alarm.ID_Alarm, Alarm_DateTime: newDateTime,
+      Alarm_Vibration: alarm.Alarm_Vibration, Alarm_Drzemka: newDrzemka, Alarm_isActive: alarm.Alarm_isActive,
+      Monday: alarm.Monday, Tuesday: alarm.Tuesday, Wednesday: alarm.Wednesday, Thursday: alarm.Thursday, Friday: alarm.Friday, Saturday: alarm.Saturday, Sunday: alarm.Sunday);
+
   @override
   String toString() {
     return 'Alarm{ID: $ID_Alarm, Czas: $Alarm_DateTime, Aktywny: $Alarm_isActive}';
@@ -129,14 +151,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+
   var db;
   initDb() async {
     print("Zainicjalizowano bazę danych");
-    Database db =
-        await openDatabase(join(await getDatabasesPath(), 'AlarmDB.db'));
+    Database db = await openDatabase(join(await getDatabasesPath(), 'AlarmDB.db'));
+    //await db.execute('CREAT TABLE ..........') tutaj był execut do db;
     // await db.query('alarms').then((value) => print(value));
     print("Inicjalizacja zakończona");
   }
+
 
   //------------------------ Budzik ---------------------------\\
   Widget alarm() {

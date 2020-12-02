@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -7,6 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:projekt_pum/Edit_Alarm.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:vibration/vibration.dart';
+
 import 'package:path/path.dart';
 
 import 'main.dart';
@@ -18,8 +20,6 @@ Future<List<Alarm>> getAlarms() async {
   Database db =
   await openDatabase(join(await getDatabasesPath(), 'AlarmDB.db'));
   await db.query('BudzikEntity').then((value) => alarmsDB = value);
-  // print(alarmsDB);
-  // print(alarmsDB.length);
 
   List<Alarm> alarms=List.generate(alarmsDB.length, (index) {
     Alarm alarm = Alarm.fromMap(alarmsDB[index]);
@@ -54,14 +54,13 @@ class _Budzik extends State<Budzik> {
     initializeDateFormatting();
     dateFormat = new DateFormat.MMMMd('pl');
     timer = Timer.periodic(Duration(seconds:1), (Timer t) => checkForAlarms());
-    timer2 = Timer.periodic(Duration(hours: 1), (Timer t) => autoUdateDates());
+    timer2 = Timer.periodic(Duration(days: 1), (Timer t) => autoUdateDates());
     _alarms = getAlarms();
 
   }
   // Funkcja automatycznie sprawdzająca datę co godzinę czy jest poprawna
   autoUdateDates() async {
     List<Alarm> alarms = await getAlarms();
-    int zmienna = 0;
     var pon=1;
     var wt=2;
     var sr=3;
@@ -69,56 +68,346 @@ class _Budzik extends State<Budzik> {
     var pt=5;
     var sb=6;
     var nd=7;
-    //DateTime tomorrow = new DateTime.now().add(Duration(days: 1));
+    DateTime tomorrow = new DateTime.now().add(Duration(days: 1));
     for(var alarm in alarms){
-      if(alarm.Alarm_DateTime.day < DateTime.now().day){
-        if(alarm.Monday == 1 && DateTime.now().weekday==pon){
-          alarm.Alarm_DateTime.add(Duration(days: 1));
-          // updateAlarm(alarm);
+      if(tomorrow.weekday==pon){
+        if(alarm.Monday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 1));
+          updateAlarm(alarm);
+          break;
         }
-        if(alarm.Tuesday == 1 && DateTime.now().weekday==wt){
-          alarm.Alarm_DateTime.add(Duration(days: 1));
+        else if(alarm.Tuesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 2));
+          updateAlarm(alarm);
+          break;
         }
-        if(alarm.Wednesday == 1 && DateTime.now().weekday==sr){
-          alarm.Alarm_DateTime.add(Duration(days: 1));
+        else if(alarm.Wednesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 3));
+          updateAlarm(alarm);
+          break;
         }
-        if(alarm.Thursday == 1 && DateTime.now().weekday==czw){
-          alarm.Alarm_DateTime.add(Duration(days: 1));
+        else if(alarm.Thursday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 4));
+          updateAlarm(alarm);
+          break;
         }
-        if(alarm.Friday == 1 && DateTime.now().weekday==pt){
-          alarm.Alarm_DateTime.add(Duration(days: 1));
+        else if(alarm.Friday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 5));
+          updateAlarm(alarm);
+          break;
         }
-        if(alarm.Saturday == 1 && DateTime.now().weekday==sb){
-          alarm.Alarm_DateTime.add(Duration(days: 1));
+        else if(alarm.Saturday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 6));
+          updateAlarm(alarm);
+          break;
         }
-        if(alarm.Sunday == 1 && DateTime.now().weekday==nd){
-          alarm.Alarm_DateTime.add(Duration(days: 1));
+        else if(alarm.Sunday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 7));
+          updateAlarm(alarm);
+          break;
         }
-
       }
+      else if(tomorrow.weekday==wt){
+        if(alarm.Tuesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 1));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Wednesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 2));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Thursday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 3));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Friday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 4));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Saturday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 5));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Sunday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 6));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Monday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 7));
+          updateAlarm(alarm);
+          break;
+        }
+      }
+      else if(tomorrow.weekday==sr){
+        if(alarm.Wednesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 1));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Thursday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 2));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Friday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 3));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Saturday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 4));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Sunday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 5));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Monday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 6));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Tuesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 7));
+          updateAlarm(alarm);
+          break;
+        }
+      }
+      else if(tomorrow.weekday==czw){
+        if(alarm.Thursday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 1));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Friday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 2));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Saturday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 3));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Sunday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 4));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Monday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 5));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Tuesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 6));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Wednesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 7));
+          updateAlarm(alarm);
+          break;
+        }
+      }
+      else if(tomorrow.weekday==pt){
+        if(alarm.Friday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 1));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Saturday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 2));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Sunday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 3));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Monday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 4));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Tuesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 5));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Wednesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 6));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Thursday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 7));
+          updateAlarm(alarm);
+          break;
+        }
+      }
+      else if(tomorrow.weekday==sb){
+        if(alarm.Saturday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 1));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Sunday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 2));
+          updateAlarm(alarm);
+          break;
+        }
+        if(alarm.Monday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 3));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Tuesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 4));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Wednesday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 5));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Thursday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 6));
+          updateAlarm(alarm);
+          break;
+        }
+        else if(alarm.Friday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 7));
+          updateAlarm(alarm);
+          break;
+        }
+      }
+      else if(tomorrow.weekday==nd){
+       if(alarm.Sunday==1){
+          alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 1));
+          updateAlarm(alarm);
+          break;
+        }
+       else if(alarm.Monday==1){
+         alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 2));
+         updateAlarm(alarm);
+         break;
+       }
+       else if(alarm.Tuesday==1){
+         alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 3));
+         updateAlarm(alarm);
+         break;
+       }
+       else if(alarm.Wednesday==1){
+         alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 4));
+         updateAlarm(alarm);
+         break;
+       }
+       else if(alarm.Thursday==1){
+         alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 5));
+         updateAlarm(alarm);
+         break;
+       }
+       else if(alarm.Friday==1){
+         alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 6));
+         updateAlarm(alarm);
+         break;
+       }
+       else if(alarm.Saturday==1){
+         alarm.Alarm_DateTime=alarm.Alarm_DateTime.add(Duration(days: 7));
+         updateAlarm(alarm);
+         break;
+       }
+  }
     }
   }
+
+  // checkNextDay(Alarm alarm)
+  // {
+  //   DateTime xd = alarm.Alarm_DateTime;
+  //
+  //   int weekday = xd.weekday;
+  //
+  //   // which days alarm is running
+  //   var weekdayList= [false,false,false,false,false,false,false];
+  //   if(alarm.Monday==1)
+  //     weekdayList[0]=true;
+  //   if(alarm.Tuesday==1)
+  //     weekdayList[1]=true;
+  //   if(alarm.Wednesday==1)
+  //     weekdayList[2]=true;
+  //   if(alarm.Tuesday==1)
+  //     weekdayList[3]=true;
+  //   if(alarm.Thursday==1)
+  //     weekdayList[4]=true;
+  //   if(alarm.Friday==1)
+  //     weekdayList[5]=true;
+  //   if(alarm.Saturday==1)
+  //     weekdayList[6]=true;
+  //   if(alarm.Sunday==1)
+  //     weekdayList[7]=true;
+  //
+  //   var copy = weekdayList;
+  //   weekdayList.addAll(copy);
+  //
+  //   int weekdayCopy=weekday+1;
+  //   int amountOfDaysToAdd=0;
+  //
+  //     for(var i=weekday;i<=weekday+7;i++)
+  //       {
+  //         amountOfDaysToAdd++;
+  //         if(weekdayList[i-1])
+  //           {
+  //             break;
+  //           }
+  //       }
+  //     print("iledodac"+amountOfDaysToAdd.toString());
+  // }
+
+
   // Funkcja sprawdzająca co sekundę czy jakiś alarm powinien startować
   checkForAlarms() async {
     List<Alarm> alarms = await getAlarms();
     DateTime now =new DateTime.now();
     now = new DateTime(now.year,now.month,now.day,now.hour,now.minute,now.second,0,0).add(Duration(hours: 1));
-    //print("check alarms: "+now.toString());
     for(var alarm in alarms)
       {
-        if(alarm.Alarm_DateTime==now)
-          AlarmStart();
-         // DateTime beforeDrzemka = alarm.Alarm_DateTime;
-          //if(alarm.Alarm_Drzemka==1 && OneDrzemka==1){
-           // alarm.Alarm_DateTime.add(Duration(minutes: 5));
-           // OneDrzemka = 0;
-           // updateAlarm(alarm);
+        if(alarm.Alarm_DateTime==now && alarm.Alarm_isActive==1)
+          {
+            scheduleAlarm();
+            if(alarm.Alarm_Vibration==1){
+              if (await Vibration.hasVibrator()) {
+                if (await Vibration.hasCustomVibrationsSupport()) {
+                  Vibration.vibrate(pattern: [500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 500]);
+                }
+                else{
+                  Vibration.vibrate();
+                  await Future.delayed(Duration(milliseconds: 500));
+                  Vibration.vibrate();
+                }
+              }
+            }
+            if(alarm.Alarm_Drzemka==1){
+              Alarm copyOfAlarm = Alarm.copy2(alarm,alarm.Alarm_DateTime.add(new Duration(minutes: 4)),0);
+              updateAlarm(copyOfAlarm);
+            }
+            if(alarm.Alarm_Drzemka==0){
+                Alarm copyOfAlarm = Alarm.copy2(alarm,alarm.Alarm_DateTime.add(new Duration(minutes: -4)),1);
+                updateAlarm(copyOfAlarm);
+            }
           }
-          //if(beforeDrzemka < alarm.Alarm_DateTime){
-          //  alarm.Alarm_DateTime.add(Duration(minutes: -5));
-          //  updateAlarm(alarm);
-         // }
       }
+  }
 
 
   @override
@@ -127,13 +416,7 @@ class _Budzik extends State<Budzik> {
     timer2?.cancel();
     super.dispose();
   }
-// Funkcja startująca alarm
-  void AlarmStart() async{
-    scheduleAlarm();
-    if (await Vibration.hasVibrator()) {
-      Vibration.vibrate(pattern: [500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 500]);
-    }
-  }
+
 
 // Operacje na DB
   var db;
@@ -149,40 +432,8 @@ class _Budzik extends State<Budzik> {
     print("Po aktualizacji: "+alarm.toString());
   }
 
-
-// Refresh listview
-
-  // void refreshList() {
-  //   // reload
-  //   setState(() {
-  //     _listFuture = updateAndGetList();
-  //   });
-  // }
-  //
-  // Future<List<Alarm>> updateAndGetList() async {
-  //   await widget.alarms.update();
-  //
-  //   // return the list here
-  //   return widget.feeds.getList();
-  // }
-  // Future<Null> updateList() async {
-  //   await widget.feeds.update();
-  //   setState(() {
-  //     widget.items = widget.feeds.getList();
-  //   });
-  //   //widget.items = widget.feeds.getList();
-  // }
-
-
-
   @override
   Widget build(BuildContext context) {
-
-    // https://www.greycastle.se/reloading-future-with-flutter-futurebuilder/
-    // https://github.com/flutter/flutter/issues/62019
-    // https://github.com/mkewat/pulltorefresh/blob/master/main.dart
-    // https://stackoverflow.com/questions/53845267/setstate-not-reloading-state-in-dart-flutter
-
     return FutureBuilder<List<Alarm>>(
       future: _alarms,
       builder: (BuildContext context, AsyncSnapshot<List<Alarm>> snapshot) {
@@ -285,7 +536,7 @@ class _Budzik extends State<Budzik> {
                                           remove_from_DB(snapshot.data[index].ID_Alarm);
                                           setState(() {
                                             _alarms = getAlarms();
-                                          });
+                                           });
                                         },
                                       ),
                                       IconButton(
